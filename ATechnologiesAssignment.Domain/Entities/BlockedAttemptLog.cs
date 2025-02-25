@@ -1,6 +1,8 @@
-﻿namespace ATechnologiesAssignment.Domain.Entities
+﻿using ATechnologiesAssignment.Domain.Base;
+
+namespace ATechnologiesAssignment.Domain.Entities
 {
-    public class BlockedAttemptLog
+    public class BlockedAttemptLog : BaseEntity
     {
         public string Id { get; set; }
         public string IpAddress { get; set; }
