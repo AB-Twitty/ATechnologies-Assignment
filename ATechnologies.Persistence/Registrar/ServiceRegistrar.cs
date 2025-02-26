@@ -7,7 +7,7 @@ namespace ATechnologies.Persistence.Registrar
 {
     public static class ServiceRegistrar
     {
-        public static IServiceCollection RegisterPersistenceServices(this IServiceCollection services)
+        public static IServiceCollection RegisterPersistence(this IServiceCollection services)
         {
             services.AddSingleton<DataStoreContext>();
             services.AddScoped(typeof(IRepository<>), typeof(InMemoryRepository<>));

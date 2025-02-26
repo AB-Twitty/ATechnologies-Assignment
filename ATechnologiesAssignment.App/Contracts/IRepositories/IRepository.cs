@@ -11,6 +11,7 @@ namespace ATechnologiesAssignment.App.Contracts.IRepositories
         Task<PagedList<TEntity>> GetPaginatedAsync(int pageIndex, int pageSize);
         Task<PagedList<TEntity>> GetPaginatedAsync(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> GetByIdAsync(string id);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
         Task<bool> AddAsync(TEntity entity, string entityKey = "");
         Task<TEntity> AddWithReturnAsync(TEntity entity, string entityKey = "");
         Task DeleteByIdAsync(string id);

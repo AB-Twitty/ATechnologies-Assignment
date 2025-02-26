@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace ATechnologies.Persistence.Repositories
 {
-    public abstract class InMemoryRepository<TEntity>(DataStoreContext dataStore) : IRepository<TEntity> where TEntity : BaseEntity
+    public class InMemoryRepository<TEntity>(DataStoreContext dataStore) : IRepository<TEntity> where TEntity : BaseEntity
     {
         #region Fields
 
@@ -56,6 +56,11 @@ namespace ATechnologies.Persistence.Repositories
                     totalCount: DataDict.Values.Count(predicate.Compile())
                     )
                 );
+        }
+
+        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Task.FromResult(DataDict.Values.Any(predicate.Compile()));
         }
 
         public virtual async Task<bool> AddAsync(TEntity entity, string entityKey = "")
