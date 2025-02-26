@@ -19,6 +19,12 @@ namespace ATechnologiesAssignment.Services.Registrar
             // register services
             services.AddTransient<ICountryService, CountryService>();
 
+            services.AddHttpClient<ICountryInfoService, CountryInfoService>(client =>
+            {
+                client.BaseAddress = new Uri("https://restcountries.com/v3.1/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
             return services;
         }
     }

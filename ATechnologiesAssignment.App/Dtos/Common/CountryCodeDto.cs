@@ -2,6 +2,12 @@
 {
     public class CountryCodeDto
     {
-        public string CountryCode { get; set; }
+        private string _countryCode;
+
+        public required string CountryCode
+        {
+            get => _countryCode;
+            set => _countryCode = value.ToUpper();
+        }
     }
 }

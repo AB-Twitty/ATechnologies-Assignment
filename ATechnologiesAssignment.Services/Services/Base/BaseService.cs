@@ -39,6 +39,33 @@ namespace ATechnologiesAssignment.Services.Services.Base
             };
         }
 
+        protected virtual BaseResponse NotFound(string message = "Resource not found.")
+        {
+            return new BaseResponse
+            {
+                StatusCode = HttpStatusCode.NotFound,
+                Message = message
+            };
+        }
+
+        protected virtual BaseResponse Created(string message = "Resource created.")
+        {
+            return new BaseResponse
+            {
+                StatusCode = HttpStatusCode.Created,
+                Message = message
+            };
+        }
+
+        protected virtual BaseResponse NoContent(string message = "No content.")
+        {
+            return new BaseResponse
+            {
+                StatusCode = HttpStatusCode.NoContent,
+                Message = message
+            };
+        }
+
 
 
         protected virtual DataResponse<TData> Success<TData>(TData data, string message = "Request was successful.")
@@ -58,6 +85,16 @@ namespace ATechnologiesAssignment.Services.Services.Base
                 StatusCode = statusCode,
                 Message = message,
                 Errors = errors == null ? null : ParseErrors(errors)
+            };
+        }
+
+        protected virtual DataResponse<TData> Created<TData>(TData data, string message = "Resource created.")
+        {
+            return new DataResponse<TData>
+            {
+                StatusCode = HttpStatusCode.Created,
+                Message = message,
+                Data = data
             };
         }
     }

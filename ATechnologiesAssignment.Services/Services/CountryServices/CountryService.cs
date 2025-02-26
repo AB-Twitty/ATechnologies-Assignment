@@ -14,25 +14,19 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
 
         private readonly IRepository<BlockedCountry> _blockedCountryRepo;
         private readonly IValidator<CountryCodeDto> _countryCodeValidator;
+        private readonly ICountryInfoService _countryInfoService;
 
         #endregion
 
         #region Ctor
 
         public CountryService(IRepository<BlockedCountry> blockedCountryRepo,
-            IValidator<CountryCodeDto> countryCodeValidator)
+            IValidator<CountryCodeDto> countryCodeValidator,
+            ICountryInfoService countryInfoService)
         {
             _blockedCountryRepo = blockedCountryRepo;
             _countryCodeValidator = countryCodeValidator;
-        }
-
-        #endregion
-
-        #region Utils
-
-        private Task<string> GetCountryNameByCodeAsync(string countryCode)
-        {
-            return Task.FromResult("Country Name");
+            _countryInfoService = countryInfoService;
         }
 
         #endregion
@@ -55,7 +49,7 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
             }
 
             // fetch the country name by country code
-            var countryName = await GetCountryNameByCodeAsync(countryCode.CountryCode);
+            var countryName = await _countryInfoService.GetCountryNameByCodeAsync(countryCode.CountryCode);
 
             var blockedCountry = new BlockedCountry
             {
@@ -68,7 +62,7 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
                 return Error("Failed to block country");
             }
 
-            return Success(blockedCountry, "Country blocked successfully");
+            return Created(blockedCountry, "Country blocked successfully");
         }
 
         #endregion
