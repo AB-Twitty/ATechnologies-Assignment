@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\ATechnologies.Persistence\ATechnologies.Persistence.csproj" />
+    <ProjectReference Include="..\ATechnologiesAssignment.App\ATechnologiesAssignment.App.csproj" />
+    <ProjectReference Include="..\ATechnologiesAssignment.Services\ATechnologiesAssignment.Services.csproj" />
   </ItemGroup>
 
 </Project>
