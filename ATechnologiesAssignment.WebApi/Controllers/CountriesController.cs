@@ -20,5 +20,12 @@ namespace ATechnologiesAssignment.WebApi.Controllers
             var response = await _countryService.AddBlockedCountryAsync(countryCode);
             return HandleResponse(response);
         }
+
+        [HttpDelete("block/{countryCode}")]
+        public async Task<IActionResult> DeleteBlockedCountry(string countryCode)
+        {
+            var response = await _countryService.DeleteBlockedCountryAsync(new CountryCodeDto { CountryCode = countryCode });
+            return HandleResponse(response);
+        }
     }
 }

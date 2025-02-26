@@ -65,6 +65,26 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
             return Created(blockedCountry, "Country blocked successfully");
         }
 
+        public async Task<BaseResponse> DeleteBlockedCountryAsync(CountryCodeDto countryCode)
+        {
+            var validationResult = _countryCodeValidator.Validate(countryCode);
+
+            if (!validationResult.IsValid)
+            {
+                return ValidationError(validationResult.Errors);
+            }
+
+            // Check if country is not blocked
+            if (!await _blockedCountryRepo.AnyAsync(bc => bc.CountryCode == countryCode.CountryCode))
+            {
+                return NotFound($"Country with code '{countryCode.CountryCode}' is not blocked.");
+            }
+
+            await _blockedCountryRepo.DeleteByIdAsync(countryCode.CountryCode);
+
+            return Success("Country unblocked successfully");
+        }
+
         #endregion
     }
 }
