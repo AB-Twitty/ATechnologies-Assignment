@@ -13,7 +13,7 @@ namespace ATechnologiesAssignment.App.Contracts.IRepositories
         Task<TEntity> GetByIdAsync(string id);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
         Task<bool> AddAsync(TEntity entity, string entityKey = "");
-        Task<TEntity> AddWithReturnAsync(TEntity entity, string entityKey = "");
+        Task<string> AddWithReturnAsync(TEntity entity, string entityKey = "");
         Task<bool> DeleteByIdAsync(string id);
     }
 }

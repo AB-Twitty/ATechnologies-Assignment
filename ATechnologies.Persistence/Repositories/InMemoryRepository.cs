@@ -82,12 +82,17 @@ namespace ATechnologies.Persistence.Repositories
             return await Task.Run(() => DataDict.TryAdd(entityKey, entity));
         }
 
-        public virtual async Task<TEntity> AddWithReturnAsync(TEntity entity, string entityKey = "")
+        public virtual async Task<string> AddWithReturnAsync(TEntity entity, string entityKey = "")
         {
-            if (await AddAsync(entity, entityKey))
-                return DataDict[entityKey];
+            entityKey = string.IsNullOrEmpty(entityKey) ? Guid.NewGuid().ToString() : entityKey;
 
-            return default;
+            if (string.IsNullOrEmpty(entityKey) && DataDict.ContainsKey(entityKey))
+                return string.Empty;
+
+            if (await Task.Run(() => DataDict.TryAdd(entityKey, entity)))
+                return entityKey;
+
+            return string.Empty;
         }
 
         public virtual async Task<bool> DeleteByIdAsync(string id)
