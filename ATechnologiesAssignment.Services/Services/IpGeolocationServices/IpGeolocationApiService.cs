@@ -68,6 +68,17 @@ namespace ATechnologiesAssignment.Services.Services.IpGeolocationServices
             }
         }
 
+        public async Task<string> GetCountryCodeByIpAsync(string ip)
+        {
+            var geolocation = await GetGeolocationByIpAsync(ip);
+            if (geolocation is JsonElement jsonElement && jsonElement.TryGetProperty("country_code", out var countryCode))
+            {
+                return countryCode.GetString() ?? throw new JsonException("Country code not found in geolocation data.");
+            }
+
+            throw new JsonException("Country code not found in geolocation data.");
+        }
+
         #endregion
     }
 }

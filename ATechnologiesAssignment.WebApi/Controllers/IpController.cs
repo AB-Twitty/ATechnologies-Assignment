@@ -19,5 +19,12 @@ namespace ATechnologiesAssignment.WebApi.Controllers
             var response = await _ipGeolocationService.LookupCountryViaIpAsync(ip);
             return HandleResponse(response);
         }
+
+        [HttpGet("check-block")]
+        public async Task<IActionResult> CheckIpBlocked()
+        {
+            var response = await _ipGeolocationService.CheckIpBlockedAsync();
+            return HandleResponse(response);
+        }
     }
 }
