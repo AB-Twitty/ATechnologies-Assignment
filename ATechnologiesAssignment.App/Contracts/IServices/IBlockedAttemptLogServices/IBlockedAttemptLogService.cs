@@ -4,6 +4,6 @@ namespace ATechnologiesAssignment.App.Contracts.IServices.IBlockedAttemptLogServ
 {
     public interface IBlockedAttemptLogService
     {
-        Task<BaseResponse> LogBlockedAttemptAsync(string ipAddress);
+        Task<BaseResponse> GetBlockAttemptLogPaginatedAsync(int page = 1, int pageSize = 25, string ip = "", string countryCode = "");
     }
 }

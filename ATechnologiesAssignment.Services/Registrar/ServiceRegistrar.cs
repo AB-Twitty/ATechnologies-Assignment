@@ -1,7 +1,9 @@
-﻿using ATechnologiesAssignment.App.Contracts.IServices.ICountryServices;
+﻿using ATechnologiesAssignment.App.Contracts.IServices.IBlockedAttemptLogServices;
+using ATechnologiesAssignment.App.Contracts.IServices.ICountryServices;
 using ATechnologiesAssignment.App.Contracts.IServices.IIpGeolocationServices;
 using ATechnologiesAssignment.App.Contracts.IValidators;
 using ATechnologiesAssignment.App.Dtos.Common;
+using ATechnologiesAssignment.Services.Services.BlockedAttemptLogServices;
 using ATechnologiesAssignment.Services.Services.CountryServices;
 using ATechnologiesAssignment.Services.Services.IpGeolocationServices;
 using ATechnologiesAssignment.Services.Validators.Common;
@@ -36,6 +38,8 @@ namespace ATechnologiesAssignment.Services.Registrar
                 client.BaseAddress = new Uri("https://api.ipapi.com/api/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
+
+            services.AddTransient<IBlockedAttemptLogService, BlockedAttemptLogService>();
 
             return services;
         }
