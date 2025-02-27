@@ -99,6 +99,11 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
             return Success(blockedCountries);
         }
 
+        public async Task<bool> IsCountryBlockedAsync(string countryCode)
+        {
+            return await _blockedCountryRepo.AnyAsync(bc => bc.CountryCode.Equals(countryCode, StringComparison.CurrentCultureIgnoreCase));
+        }
+
         #endregion
     }
 }

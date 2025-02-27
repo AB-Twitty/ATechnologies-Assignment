@@ -8,5 +8,6 @@ namespace ATechnologiesAssignment.App.Contracts.IServices.ICountryServices
         Task<BaseResponse> AddBlockedCountryAsync(CountryCodeDto countryCode);
         Task<BaseResponse> DeleteBlockedCountryAsync(CountryCodeDto countryCode);
         Task<BaseResponse> GetBlockedCountriesAsync(int page, int pageSize, string search);
+        Task<bool> IsCountryBlockedAsync(string countryCode);
     }
 }
