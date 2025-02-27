@@ -14,6 +14,13 @@ namespace ATechnologiesAssignment.WebApi.Controllers
             _countryService = countryService;
         }
 
+        [HttpGet("blocked")]
+        public async Task<IActionResult> GetAllBlockedCountries(int page = 1, int pageSize = 25, string search = "")
+        {
+            var response = await _countryService.GetBlockedCountriesAsync(page, pageSize, search);
+            return HandleResponse(response);
+        }
+
         [HttpPost("block")]
         public async Task<IActionResult> AddBlockedCountry([FromBody] CountryCodeDto countryCode)
         {

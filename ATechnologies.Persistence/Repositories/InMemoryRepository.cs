@@ -21,22 +21,29 @@ namespace ATechnologies.Persistence.Repositories
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await Task.FromResult(DataDict.Values);
+            return await Task.Run(() => DataDict.Values);
         }
 
-        public virtual async Task<TEntity> GetByIdAsync(string id)
+        public virtual async Task<TEntity?> GetByIdAsync(string id)
         {
-            return await Task.FromResult(DataDict[id]);
+            return await Task.Run(() =>
+            {
+                if (DataDict.TryGetValue(id, out TEntity? entity))
+                {
+                    return entity;
+                }
+                return null;
+            });
         }
 
         public virtual async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await Task.FromResult(DataDict.Values.Where(predicate.Compile()));
+            return await Task.Run(() => DataDict.Values.Where(predicate.Compile()));
         }
 
         public virtual async Task<PagedList<TEntity>> GetPaginatedAsync(int pageIndex, int pageSize)
         {
-            return await Task.FromResult(
+            return await Task.Run(() =>
                 new PagedList<TEntity>(
                     data: DataDict.Values.Skip((pageIndex - 1) * pageSize).Take(pageSize),
                     pageIndex: pageIndex,
@@ -48,7 +55,9 @@ namespace ATechnologies.Persistence.Repositories
 
         public virtual async Task<PagedList<TEntity>> GetPaginatedAsync(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate)
         {
-            return await Task.FromResult(
+            pageIndex = pageIndex < 1 ? 1 : pageIndex;
+
+            return await Task.Run(() =>
                 new PagedList<TEntity>(
                     data: DataDict.Values.Where(predicate.Compile()).Skip((pageIndex - 1) * pageSize).Take(pageSize),
                     pageIndex: pageIndex,
@@ -60,35 +69,30 @@ namespace ATechnologies.Persistence.Repositories
 
         public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await Task.FromResult(DataDict.Values.Any(predicate.Compile()));
+            return await Task.Run(() => DataDict.Values.Any(predicate.Compile()));
         }
 
         public virtual async Task<bool> AddAsync(TEntity entity, string entityKey = "")
         {
-            entityKey = string.IsNullOrEmpty(entityKey) ? entityKey : Guid.NewGuid().ToString();
+            entityKey = string.IsNullOrEmpty(entityKey) ? Guid.NewGuid().ToString() : entityKey;
 
             if (string.IsNullOrEmpty(entityKey) && DataDict.ContainsKey(entityKey))
                 return false;
 
-            return await Task.FromResult(DataDict.TryAdd(entityKey, entity));
+            return await Task.Run(() => DataDict.TryAdd(entityKey, entity));
         }
 
         public virtual async Task<TEntity> AddWithReturnAsync(TEntity entity, string entityKey = "")
         {
-            entityKey = string.IsNullOrEmpty(entityKey) ? entityKey : Guid.NewGuid().ToString();
-
-            if (string.IsNullOrEmpty(entityKey) && DataDict.ContainsKey(entityKey))
-                return default;
-
-            if (await Task.FromResult(DataDict.TryAdd(entityKey, entity)))
+            if (await AddAsync(entity, entityKey))
                 return DataDict[entityKey];
 
             return default;
         }
 
-        public virtual async Task DeleteByIdAsync(string id)
+        public virtual async Task<bool> DeleteByIdAsync(string id)
         {
-            await Task.FromResult(DataDict.TryRemove(id, out _));
+            return await Task.Run(() => DataDict.TryRemove(id, out _));
         }
 
         #endregion

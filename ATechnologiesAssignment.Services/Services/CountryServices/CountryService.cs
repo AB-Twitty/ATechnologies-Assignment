@@ -57,7 +57,7 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
                 CountryName = countryName
             };
 
-            if (!await _blockedCountryRepo.AddAsync(blockedCountry))
+            if (!await _blockedCountryRepo.AddAsync(blockedCountry, blockedCountry.CountryCode))
             {
                 return Error("Failed to block country");
             }
@@ -80,9 +80,23 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
                 return NotFound($"Country with code '{countryCode.CountryCode}' is not blocked.");
             }
 
-            await _blockedCountryRepo.DeleteByIdAsync(countryCode.CountryCode);
+            if (await _blockedCountryRepo.DeleteByIdAsync(countryCode.CountryCode))
+                return Success("Country unblocked successfully");
 
-            return Success("Country unblocked successfully");
+            return Error("Failed to unblock country");
+        }
+
+        public async Task<BaseResponse> GetBlockedCountriesAsync(int page, int pageSize, string search)
+        {
+            var blockedCountries = await _blockedCountryRepo.GetPaginatedAsync(
+                pageIndex: page,
+                pageSize: pageSize,
+                predicate: bc => string.IsNullOrEmpty(search)
+                    || bc.CountryCode.Contains(search, StringComparison.CurrentCultureIgnoreCase)
+                    || bc.CountryName.Contains(search, StringComparison.CurrentCultureIgnoreCase)
+                );
+
+            return Success(blockedCountries);
         }
 
         #endregion
