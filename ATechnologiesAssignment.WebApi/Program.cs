@@ -1,4 +1,5 @@
 using ATechnologies.Persistence.Registrar;
+using ATechnologiesAssignment.App.Registrar;
 using ATechnologiesAssignment.Services.Registrar;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register libraries
+builder.Services.RegisterApplication(builder.Configuration);
 builder.Services.RegisterPersistence();
 builder.Services.RegisterServices();
 
