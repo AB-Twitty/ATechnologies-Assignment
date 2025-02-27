@@ -1,6 +1,7 @@
 using ATechnologies.Persistence.Registrar;
 using ATechnologiesAssignment.App.Registrar;
 using ATechnologiesAssignment.Services.Registrar;
+using ATechnologiesAssignment.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,5 +35,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.Run();
