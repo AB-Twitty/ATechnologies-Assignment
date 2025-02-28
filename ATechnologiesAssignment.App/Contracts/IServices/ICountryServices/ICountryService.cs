@@ -1,4 +1,5 @@
 ﻿using ATechnologiesAssignment.App.Dtos.Common;
+using ATechnologiesAssignment.App.Dtos.TemporalBlockedCountryDtos;
 using ATechnologiesAssignment.App.Models;
 
 namespace ATechnologiesAssignment.App.Contracts.IServices.ICountryServices
@@ -9,5 +10,6 @@ namespace ATechnologiesAssignment.App.Contracts.IServices.ICountryServices
         Task<BaseResponse> DeleteBlockedCountryAsync(CountryCodeDto countryCode);
         Task<BaseResponse> GetBlockedCountriesAsync(int page, int pageSize, string search);
         Task<bool> IsCountryBlockedAsync(string countryCode);
+        Task<BaseResponse> BlockCountryTemporalyAsync(TemporalBlockedCountryDto dto);
     }
 }

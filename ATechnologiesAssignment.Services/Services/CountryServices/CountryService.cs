@@ -2,9 +2,11 @@
 using ATechnologiesAssignment.App.Contracts.IServices.ICountryServices;
 using ATechnologiesAssignment.App.Contracts.IValidators;
 using ATechnologiesAssignment.App.Dtos.Common;
+using ATechnologiesAssignment.App.Dtos.TemporalBlockedCountryDtos;
 using ATechnologiesAssignment.App.Models;
 using ATechnologiesAssignment.Domain.Entities;
 using ATechnologiesAssignment.Services.Services.Base;
+using System.Net;
 
 namespace ATechnologiesAssignment.Services.Services.CountryServices
 {
@@ -15,6 +17,8 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
         private readonly IRepository<BlockedCountry> _blockedCountryRepo;
         private readonly IValidator<CountryCodeDto> _countryCodeValidator;
         private readonly ICountryInfoService _countryInfoService;
+        private readonly IRepository<TemporalBlockedCountry> _temporalBlockedCountryRepo;
+        private readonly IValidator<TemporalBlockedCountryDto> _temporalBlockedCountryDtoValidator;
 
         #endregion
 
@@ -22,11 +26,15 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
 
         public CountryService(IRepository<BlockedCountry> blockedCountryRepo,
             IValidator<CountryCodeDto> countryCodeValidator,
-            ICountryInfoService countryInfoService)
+            ICountryInfoService countryInfoService,
+            IRepository<TemporalBlockedCountry> temporalBlockedCountryRepo,
+            IValidator<TemporalBlockedCountryDto> temporalBlockedCountryDtoValidator)
         {
             _blockedCountryRepo = blockedCountryRepo;
             _countryCodeValidator = countryCodeValidator;
             _countryInfoService = countryInfoService;
+            _temporalBlockedCountryRepo = temporalBlockedCountryRepo;
+            _temporalBlockedCountryDtoValidator = temporalBlockedCountryDtoValidator;
         }
 
         #endregion
@@ -63,6 +71,45 @@ namespace ATechnologiesAssignment.Services.Services.CountryServices
             }
 
             return Created(blockedCountry, "Country blocked successfully");
+        }
+
+        public async Task<BaseResponse> BlockCountryTemporalyAsync(TemporalBlockedCountryDto dto)
+        {
+            var validationResult = _temporalBlockedCountryDtoValidator.Validate(dto);
+            if (!validationResult.IsValid)
+            {
+                return ValidationError(validationResult.Errors);
+            }
+
+            if (await _temporalBlockedCountryRepo.AnyAsync(tbc => tbc.CountryCode == dto.CountryCode))
+            {
+                return Error($"Country with code '{dto.CountryCode}' already temporaly blocked.", HttpStatusCode.Conflict);
+            }
+
+            var blockedCountry = new BlockedCountry
+            {
+                CountryCode = dto.CountryCode,
+                CountryName = await _countryInfoService.GetCountryNameByCodeAsync(dto.CountryCode)
+            };
+
+            if (!await _blockedCountryRepo.AddAsync(blockedCountry, blockedCountry.CountryCode))
+            {
+                return Error("Failed to temporaly block country");
+            }
+
+            var temporalBlockCountry = new TemporalBlockedCountry
+            {
+                CountryCode = dto.CountryCode,
+                BlockExpiredAt = DateTime.UtcNow.AddMinutes(dto.DurationMinutes),
+            };
+
+            if (!await _temporalBlockedCountryRepo.AddAsync(temporalBlockCountry, temporalBlockCountry.CountryCode))
+            {
+                await _blockedCountryRepo.DeleteByIdAsync(blockedCountry.CountryCode);
+                return Error("Failed to temporaly block country");
+            }
+
+            return Success($"Country temporaly blocked until {temporalBlockCountry.BlockExpiredAt:yyyy-MM-dd HH:mm:ss} UTC");
         }
 
         public async Task<BaseResponse> DeleteBlockedCountryAsync(CountryCodeDto countryCode)

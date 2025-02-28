@@ -1,5 +1,6 @@
 ﻿using ATechnologiesAssignment.App.Contracts.IServices.ICountryServices;
 using ATechnologiesAssignment.App.Dtos.Common;
+using ATechnologiesAssignment.App.Dtos.TemporalBlockedCountryDtos;
 using ATechnologiesAssignment.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,13 @@ namespace ATechnologiesAssignment.WebApi.Controllers
         public async Task<IActionResult> DeleteBlockedCountry(string countryCode)
         {
             var response = await _countryService.DeleteBlockedCountryAsync(new CountryCodeDto { CountryCode = countryCode });
+            return HandleResponse(response);
+        }
+
+        [HttpPost("temporal-block")]
+        public async Task<IActionResult> BlockCountryTemporaly([FromBody] TemporalBlockedCountryDto dto)
+        {
+            var response = await _countryService.BlockCountryTemporalyAsync(dto);
             return HandleResponse(response);
         }
     }

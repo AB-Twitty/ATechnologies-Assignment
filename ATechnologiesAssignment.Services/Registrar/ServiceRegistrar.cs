@@ -3,10 +3,13 @@ using ATechnologiesAssignment.App.Contracts.IServices.ICountryServices;
 using ATechnologiesAssignment.App.Contracts.IServices.IIpGeolocationServices;
 using ATechnologiesAssignment.App.Contracts.IValidators;
 using ATechnologiesAssignment.App.Dtos.Common;
+using ATechnologiesAssignment.App.Dtos.TemporalBlockedCountryDtos;
+using ATechnologiesAssignment.Services.Services.BackgroundServices;
 using ATechnologiesAssignment.Services.Services.BlockedAttemptLogServices;
 using ATechnologiesAssignment.Services.Services.CountryServices;
 using ATechnologiesAssignment.Services.Services.IpGeolocationServices;
 using ATechnologiesAssignment.Services.Validators.Common;
+using ATechnologiesAssignment.Services.Validators.TemporalBlockedCountry;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -23,6 +26,7 @@ namespace ATechnologiesAssignment.Services.Registrar
             // register validators
             services.AddTransient<IValidator<CountryCodeDto>, CountryCodeValidator>();
             services.AddTransient<IValidator<IpAddressDto>, IpAddressValidator>();
+            services.AddTransient<IValidator<TemporalBlockedCountryDto>, TemporalBlockedCountryDtoValidator>();
 
             // register services
             services.AddTransient<ICountryService, CountryService>();
@@ -40,6 +44,9 @@ namespace ATechnologiesAssignment.Services.Registrar
             });
 
             services.AddTransient<IBlockedAttemptLogService, BlockedAttemptLogService>();
+
+            // register background service
+            services.AddHostedService<TemporalBlockCleanupService>();
 
             return services;
         }
