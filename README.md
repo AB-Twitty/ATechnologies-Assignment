@@ -103,7 +103,7 @@ The API will be available at `http://localhost:5000` (or another assigned port).
 Swagger UI is available at:
 
 ```
-http://localhost:5000/swagger
+http://localhost:44327/swagger
 ```
 
 ## License
