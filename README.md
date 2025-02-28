@@ -93,7 +93,7 @@ The API will be available at `http://localhost:5000` (or another assigned port).
 
 ## Tools & Technologies
 
-- **.NET Core 7/8/9**
+- **.NET Core 8**
 - **HttpClient** (for API integration)
 - **ConcurrentDictionary** (for thread-safe in-memory storage)
 - **Swagger** (for API documentation)
