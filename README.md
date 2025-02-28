@@ -98,12 +98,6 @@ The API will be available at `http://localhost:5000` (or another assigned port).
 - **ConcurrentDictionary** (for thread-safe in-memory storage)
 - **Swagger** (for API documentation)
 
-## Running Tests (Optional)
-
-```sh
-dotnet test
-```
-
 ## API Documentation
 
 Swagger UI is available at:
